@@ -5,32 +5,34 @@ import { posts } from "../data/posts";
 
 export default function BlogPost() {
   const { slug } = useParams();
-  const post = posts.find((p) => p.id === slug);
+  const post = posts.find((p) => p.slug === slug);
 
   if (!post) {
     return (
-      <div style={{ padding: 24 }}>
-        <h1>Post not found</h1>
-        <Link to="/blog">← Back to Blog</Link>
+      <div style={{ padding: 20 }}>
+        <h2>Post not found</h2>
+        <Link to="/blog">Back to Blog</Link>
       </div>
     );
   }
 
+  // Very simple paragraph rendering (no markdown lib yet)
+  const paragraphs = post.content.split(/\n\s*\n/);
+
   return (
-    <div style={{ padding: 24, maxWidth: 800 }}>
-      <Link to="/blog">← Back to Blog</Link>
-      <h1 style={{ marginTop: 12 }}>{post.title}</h1>
-      <div style={{ fontSize: 14, opacity: 0.7, marginBottom: 16 }}>
-        {new Date(post.date).toLocaleDateString()}
+    <div style={{ padding: 20 }}>
+      <h1>{post.title}</h1>
+      <div style={{ fontSize: 12, opacity: 0.8, marginBottom: 12 }}>{post.date}</div>
+
+      {paragraphs.map((para, i) => (
+        <p key={i} style={{ marginBottom: 12, whiteSpace: "pre-wrap" }}>
+          {para}
+        </p>
+      ))}
+
+      <div style={{ marginTop: 16 }}>
+        <Link to="/blog">← Back to Blog</Link>
       </div>
-      <div dangerouslySetInnerHTML={{ __html: post.content }} />
-      {post.tags?.length ? (
-        <div style={{ marginTop: 16, fontSize: 14, opacity: 0.8 }}>
-          Tags: {post.tags.map((t) => (
-            <span key={t} style={{ marginRight: 8 }}>#{t}</span>
-          ))}
-        </div>
-      ) : null}
     </div>
   );
 }

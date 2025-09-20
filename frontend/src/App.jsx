@@ -1,47 +1,57 @@
 // src/App.jsx
-// imports...
-import AudioTest from "./pages/AudioTest";
 import React from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PlayerProvider } from "./state/playerContext";
 import NP from "./components/NP";
+import Header from "./components/Header";
 
-// Pages (assumes you already have these)
+// Pages
 import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
+import Genres from "./pages/Genres";
+import Genre from "./pages/Genre";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import AudioTest from "./pages/AudioTest";
+
+function NotFound() {
+  return (
+    <div style={{ padding: 20, fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif" }}>
+      <h2>404 — Not Found</h2>
+      <p>That page doesn’t exist.</p>
+    </div>
+  );
+}
 
 export default function App() {
   const shellStyle = {
     minHeight: "100vh",
-    paddingBottom: 68, // keep content above the NP bar height
+    // Leave room for sticky header (approx 50–60px) + NP bar (~68px)
+    paddingTop: 60,
+    paddingBottom: 80,
     boxSizing: "border-box",
     fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
-  };
-  const headerStyle = {
-    padding: "10px 12px",
-    borderBottom: "1px solid #ddd",
-    display: "flex",
-    gap: "12px",
   };
 
   return (
     <PlayerProvider>
       <BrowserRouter>
-        <div style={shellStyle}>
-          {/* Temporary plain header links (un-styled) */}
-          <div style={headerStyle}>
-            <Link to="/">Home</Link>
-            <Link to="/catalog">Catalog</Link>
-          </div>
+        <Header />
 
+        <div style={shellStyle}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/catalog" element={<Catalog />} />
+            <Route path="/genres" element={<Genres />} />
+            <Route path="/genres/:id" element={<Genre />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/audio-test" element={<AudioTest />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
 
-        {/* NOW PLAYING lives outside Routes so it shows on all pages */}
+        {/* Global Now Playing Bar */}
         <NP />
       </BrowserRouter>
     </PlayerProvider>
