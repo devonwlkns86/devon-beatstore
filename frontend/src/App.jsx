@@ -1,44 +1,49 @@
-import { NavLink, Outlet } from "react-router-dom";
+// src/App.jsx
+// imports...
+import AudioTest from "./pages/AudioTest";
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { PlayerProvider } from "./state/playerContext";
+import NP from "./components/NP";
 
-const linkStyle = ({ isActive }) => ({
-  padding: "8px 12px",
-  borderRadius: 12,
-  textDecoration: "none",
-  color: isActive ? "white" : "#111",
-  background: isActive ? "#111" : "transparent",
-  border: "1px solid #ddd",
-  marginRight: 8
-});
+// Pages (assumes you already have these)
+import Home from "./pages/Home";
+import Catalog from "./pages/Catalog";
 
 export default function App() {
+  const shellStyle = {
+    minHeight: "100vh",
+    paddingBottom: 68, // keep content above the NP bar height
+    boxSizing: "border-box",
+    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+  };
+  const headerStyle = {
+    padding: "10px 12px",
+    borderBottom: "1px solid #ddd",
+    display: "flex",
+    gap: "12px",
+  };
+
   return (
-    <div>
-      <header style={{ position: "sticky", top: 0, background: "white", borderBottom: "1px solid #eee" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontWeight: 800 }}>Devon • Beatstore</div>
-          <nav>
-            <NavLink to="/" style={linkStyle} end>Home</NavLink>
-            <NavLink to="/catalog" style={linkStyle}>Catalog</NavLink>
-            <NavLink to="/about" style={linkStyle}>About</NavLink>
-            <NavLink to="/contact" style={linkStyle}>Contact</NavLink>
-          </nav>
-        </div>
-      </header>
-
-      <main style={{ maxWidth: 960, margin: "0 auto" }}>
-        <Outlet />
-      </main>
-
-      <footer style={{ maxWidth: 960, margin: "0 auto", padding: "24px 16px", color: "#666", borderTop: "1px solid #eee" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-          <small>© {new Date().getFullYear()} Devon Wilkins — previews only.</small>
-          <div style={{ display: "flex", gap: 12 }}>
-            <a href="https://instagram.com/yourhandle" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://youtube.com/@yourchannel" target="_blank" rel="noreferrer">YouTube</a>
-            <a href="mailto:youremail@example.com">Email</a>
+    <PlayerProvider>
+      <BrowserRouter>
+        <div style={shellStyle}>
+          {/* Temporary plain header links (un-styled) */}
+          <div style={headerStyle}>
+            <Link to="/">Home</Link>
+            <Link to="/catalog">Catalog</Link>
           </div>
+
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/catalog" element={<Catalog />} />
+            <Route path="/audio-test" element={<AudioTest />} />
+          </Routes>
         </div>
-      </footer>
-    </div>
+
+        {/* NOW PLAYING lives outside Routes so it shows on all pages */}
+        <NP />
+      </BrowserRouter>
+    </PlayerProvider>
   );
 }
