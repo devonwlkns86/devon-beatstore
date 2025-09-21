@@ -9,30 +9,25 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div style={{ padding: 20 }}>
-        <h2>Post not found</h2>
-        <Link to="/blog">Back to Blog</Link>
+      <div className="app-shell">
+        <div className="card"><h2>Post not found</h2></div>
+        <div style={{ marginTop: 12 }}><Link to="/blog" className="btn">Back to Blog</Link></div>
       </div>
     );
   }
 
-  // Very simple paragraph rendering (no markdown lib yet)
   const paragraphs = post.content.split(/\n\s*\n/);
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>{post.title}</h1>
-      <div style={{ fontSize: 12, opacity: 0.8, marginBottom: 12 }}>{post.date}</div>
-
-      {paragraphs.map((para, i) => (
-        <p key={i} style={{ marginBottom: 12, whiteSpace: "pre-wrap" }}>
-          {para}
-        </p>
-      ))}
-
-      <div style={{ marginTop: 16 }}>
-        <Link to="/blog">← Back to Blog</Link>
+    <div className="app-shell">
+      <div className="card" style={{ marginBottom: 16 }}>
+        <h1>{post.title}</h1>
+        <div className="small" style={{ marginBottom: 12 }}>{post.date}</div>
+        {paragraphs.map((para, i) => (
+          <p key={i}>{para}</p>
+        ))}
       </div>
+      <Link to="/blog" className="btn">← Back to Blog</Link>
     </div>
   );
 }

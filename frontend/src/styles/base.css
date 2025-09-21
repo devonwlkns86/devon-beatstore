@@ -1,0 +1,313 @@
+/* src/styles/base.css — Soft Light Theme */
+
+/* ---------- Design tokens ---------- */
+:root {
+  /* Base surfaces */
+  --bg: #f9fafc;
+  /* very light background */
+  --panel: #ffffff;
+  /* white cards */
+  --panel-2: #f2f4f8;
+  /* soft gray panels */
+
+  /* Text */
+  --text: #111111;
+  /* true black */
+  --muted: #555555;
+  /* medium gray */
+
+  /* Accents (luxury feel) */
+  --brand: #b8860b;
+  /* dark goldenrod */
+  --brand-2: #daa520;
+  /* golden accent */
+  --ok: #16a34a;
+  /* emerald green */
+  --warn: #e07b24;
+  /* warm amber */
+
+  /* Lines, radius, shadows */
+  --line: #e0e3eb;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --shadow: 0 8px 20px rgba(17, 17, 17, .08);
+  --shadow-soft: 0 4px 12px rgba(17, 17, 17, .06);
+}
+
+/* ---------- Reset / baseline ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1000px 700px at 20% -20%, #ffffff 0%, var(--bg) 40%),
+    radial-gradient(900px 600px at 110% 0%, #f4f6f9 0%, var(--bg) 50%);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, Helvetica, sans-serif;
+}
+
+/* Layout paddings so content clears header + player */
+.app-shell {
+  min-height: 100%;
+  padding: 72px 16px 96px;
+  /* header ~60, player ~72 */
+}
+
+/* ---------- Typography ---------- */
+h1,
+h2,
+h3 {
+  margin: 0 0 .5rem
+}
+
+h1 {
+  font-size: clamp(28px, 4vw, 36px);
+  letter-spacing: .2px;
+}
+
+h2 {
+  font-size: clamp(22px, 3vw, 26px);
+}
+
+p {
+  margin: .5rem 0 1rem;
+  color: var(--text);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* ---------- Links & buttons ---------- */
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #ffffff, #f7f7f7);
+  /* solid, light */
+  border: 1px solid var(--line);
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform .12s ease,
+    box-shadow .25s ease,
+    border-color .2s ease,
+    background .2s ease,
+    filter .2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+  border-color: #d7ddea;
+  box-shadow: 0 10px 22px rgba(17, 17, 17, .10);
+  filter: saturate(1.03);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(17, 17, 17, .06);
+}
+
+/* subtle gold emphasis for primary actions (optional utility) */
+.btn.primary {
+  border-color: color-mix(in srgb, var(--brand) 35%, #d9dfeb);
+  box-shadow: 0 10px 24px rgba(184, 134, 11, .12);
+}
+
+/* Ghost variant still feels tactile */
+.ghost {
+  background: #f5f6fa;
+  border-color: var(--line);
+}
+
+.ghost:hover {
+  background: #ffffff;
+  border-color: #d7ddea;
+  box-shadow: 0 8px 20px rgba(17, 17, 17, .08);
+}
+
+/* accessibility */
+.navlink:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand) 45%, #ffffff);
+  outline-offset: 2px;
+}
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+  .btn,
+  .btn:hover,
+  .btn:active {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ---------- Cards & lists ---------- */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.list {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.item {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  transition: border-color .2s ease, transform .08s ease, box-shadow .2s ease;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.item:hover {
+  border-color: #d7dced;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ---------- Header (light, translucent) ---------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #f3f4f7;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #dfe3ec;
+}
+
+.header-inner {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.navlink {
+  color: var(--text);
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+
+.navlink:hover {
+  border-color: #e2e6f1;
+  background: #ffffff;
+}
+
+.navlink.active {
+  font-weight: 700;
+  text-decoration: none;
+  border-color: #d8def0;
+  background: linear-gradient(180deg, #ffffff, #f3f6fd);
+}
+
+/* ---------- Now Playing bar (light) ---------- */
+.np {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  border-top: linear-gradient(180deg, #f7f8fb, #f2f4f8);
+  box-shadow: 0 -10px 26px rgba(18, 38, 60, .08);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 2px 10px;
+  border: 1px solid #e1e6f2;
+  border-radius: 999px;
+  color: #415068;
+  background: #f7f9fe;
+}
+
+.title {
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* --- Song bar tweaks (light theme) --- */
+.songbar .pill {
+  border-color: #e6eaf3;
+  background: #fafbfe;
+  color: #535f75;
+}
+
+.songbar .title {
+  font-weight: 700;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(184, 134, 11, .25);
+}
+
+.price {
+  font-weight: 700;
+  color: var(--text);
+}

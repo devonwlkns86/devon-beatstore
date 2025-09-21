@@ -7,19 +7,23 @@ export default function Blog() {
   const sorted = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className="app-shell">
       <h1>Blog</h1>
-      <ul>
-        {sorted.map((p) => (
-          <li key={p.id} style={{ marginBottom: 12 }}>
-            <div>
-              <Link to={`/blog/${p.slug}`}>{p.title}</Link>
-            </div>
-            <div style={{ fontSize: 12, opacity: 0.8 }}>{p.date}</div>
-            <div>{p.excerpt}</div>
-          </li>
-        ))}
-      </ul>
+      <div className="card">
+        <ul className="list">
+          {sorted.map((p) => (
+            <li key={p.id} className="item">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                <div>
+                  <Link to={`/blog/${p.slug}`} style={{ fontWeight: 700 }}>{p.title}</Link>
+                  <div className="small">{p.date} — {p.excerpt}</div>
+                </div>
+                <Link to={`/blog/${p.slug}`} className="btn">Read</Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
