@@ -1,53 +1,81 @@
 // src/App.jsx
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { PlayerProvider } from "./state/playerContext";
-import { CartProvider } from "./state/cartContext";
-import NP from "./components/NP";
-import Header from "./components/Header";
-
-import Home from "./pages/Home";
-import Catalog from "./pages/Catalog";
-import Genres from "./pages/Genres";
-import Genre from "./pages/Genre";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import AudioTest from "./pages/AudioTest";
-import Cart from "./pages/Cart";
-
-function NotFound() {
-  return (
-    <div className="app-shell">
-      <h2>404 — Not Found</h2>
-      <p>That page doesn’t exist.</p>
-    </div>
-  );
-}
+import { useRef, useState } from "react";
+import Catalog from "./pages/Catalog.jsx";
+import NowPlayingBar from "./components/NowPlayingBar.jsx";
 
 export default function App() {
-  const shellStyle = { minHeight: "100vh", paddingTop: 60, paddingBottom: 80, boxSizing: "border-box" };
+  const [activeId, setActiveId] = useState(null);
+  const [currentTrack, setCurrentTrack] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const currentAudioRef = useRef(null);
+
+  // called by a TrackCard when user hits Play on it
+  const handleRequestPlay = async (track, audioEl) => {
+    // pause previously playing audio (if any)
+    if (currentAudioRef.current && currentAudioRef.current !== audioEl) {
+      try { currentAudioRef.current.pause(); } catch { }
+    }
+    currentAudioRef.current = audioEl;
+    setCurrentTrack(track);
+    setActiveId(track.id);
+    setIsPlaying(true);
+  };
+
+  // bottom bar play/pause
+  const handleToggleBar = async () => {
+    const el = currentAudioRef.current;
+    if (!el) return;
+    if (el.paused) {
+      await el.play();
+      setIsPlaying(true);
+    } else {
+      el.pause();
+      setIsPlaying(false);
+    }
+  };
 
   return (
-    <PlayerProvider>
-      <CartProvider>
-        <BrowserRouter>
-          <Header />
-          <div style={shellStyle}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/catalog" element={<Catalog />} />
-              <Route path="/genres" element={<Genres />} />
-              <Route path="/genres/:id" element={<Genre />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/audio-test" element={<AudioTest />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+    <main className="min-h-dvh bg-slate-50 text-slate-900 pb-24">
+      {/* top bar */}
+      <header className="border-b bg-white/80 backdrop-blur sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="size-8 rounded-xl bg-black" />
+            <span className="text-xl font-bold">Beat Store</span>
           </div>
-          <NP />
-        </BrowserRouter>
-      </CartProvider>
-    </PlayerProvider>
+          <nav className="hidden sm:flex items-center gap-4 text-sm">
+            <a className="hover:underline underline-offset-4" href="#">Home</a>
+            <a className="hover:underline underline-offset-4" href="#">Catalog</a>
+            <a className="hover:underline underline-offset-4" href="#">Licenses</a>
+            <a className="hover:underline underline-offset-4" href="#">Contact</a>
+          </nav>
+          <button className="px-3 py-1.5 rounded-xl bg-black text-white text-sm hover:opacity-90">
+            Sign In
+          </button>
+        </div>
+      </header>
+
+      {/* main content */}
+      <section className="max-w-6xl mx-auto px-4 py-8">
+        <Catalog
+          activeId={activeId}
+          onRequestPlay={handleRequestPlay}
+        />
+      </section>
+
+      {/* footer */}
+      <footer className="border-t bg-white">
+        <div className="max-w-6xl mx-auto px-4 py-6 text-sm text-gray-500">
+          © {new Date().getFullYear()} Beat Store — All rights reserved.
+        </div>
+      </footer>
+
+      {/* sticky bottom bar */}
+      <NowPlayingBar
+        track={currentTrack}
+        isPlaying={isPlaying}
+        onToggle={handleToggleBar}
+      />
+    </main>
   );
 }

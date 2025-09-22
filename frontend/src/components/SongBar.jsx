@@ -1,7 +1,7 @@
 // src/components/SongBar.jsx
 import React, { useMemo, useState } from "react";
-import { usePlayer } from "../state/playerContext";
-import { useCart } from "../state/cartContext";
+import { usePlayer } from "../state/PlayerContext";
+import { useCart } from "../state/CartContext";
 
 export default function SongBar({ track }) {
   const { track: current, setTrack, isPlaying, setIsPlaying } = usePlayer();
