@@ -1,46 +1,25 @@
-import { useEffect, useRef } from "react";
-import { useNowPlaying } from "./NowPlayingContext.jsx";
-
-export default function NowPlayingBar() {
-  const { track, clearTrack } = useNowPlaying();
-  const audioRef = useRef(null);
-
-  // auto-play when a new track is chosen
-  useEffect(() => {
-    if (track && audioRef.current) {
-      audioRef.current.play().catch(() => {
-        /* autoplay may be blocked until user interacts; that's fine */
-      });
-    }
-  }, [track]);
-
-  if (!track) return null; // nothing selected yet
-
-  const bar = {
-    position: "fixed",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: "#fff",
-    borderTop: "1px solid #eee",
-    padding: "10px 16px",
-    boxShadow: "0 -4px 16px rgba(0,0,0,0.06)",
-  };
+// src/components/NowPlayingBar.jsx
+export default function NowPlayingBar({ track, isPlaying, onToggle }) {
+  if (!track) return null;
 
   return (
-    <div style={bar}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div>
-          <strong>{track.title}</strong> {track.artist && <>by {track.artist}</>}
+    <div className="fixed bottom-0 inset-x-0 z-50">
+      <div className="mx-auto max-w-6xl px-4 py-3">
+        <div className="rounded-2xl shadow-gold bg-softblack border border-softgold/30 px-4 py-3 flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <div className="truncate font-semibold text-softgold">{track.title}</div>
+            <div className="text-sm text-gray-400 truncate">
+              {track.artist} • {track.key} • {track.bpm} BPM
+            </div>
+          </div>
+          <button
+            onClick={onToggle}
+            className="px-4 py-2 rounded-xl bg-softgold text-softblack font-semibold hover:shadow-gold transition"
+          >
+            {isPlaying ? "Pause" : "Play"}
+          </button>
         </div>
-        <audio
-          ref={audioRef}
-          src={track.url}
-          controls
-          style={{ verticalAlign: "middle" }}
-          onEnded={clearTrack}
-        />
-        <button onClick={clearTrack} style={{ marginLeft: 16 }}>Close</button>
       </div>
     </div>
   );
+}
