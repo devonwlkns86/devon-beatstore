@@ -1,76 +1,69 @@
-// src/pages/Catalog.jsx
-import { useRef, useState, useEffect } from "react";
+import React from "react";
+
+// audio imports
 import neonStreet from "../assets/neon-street-Asharpm-bpm120.mp3";
 import tropicanna from "../assets/tropicanna-Em-bpm140.mp3";
 import whereYouAre from "../assets/whereyouare-Bm-bpm90.mp3";
 
-const TRACKS = [
-  { id: "neon", title: "Neon Street", artist: "Devon", key: "A♯m", bpm: 120, src: neonStreet },
-  { id: "tropicanna", title: "Tropicanna", artist: "Devon", key: "E m", bpm: 140, src: tropicanna },
-  { id: "wya", title: "Where You Are", artist: "Devon", key: "B m", bpm: 90, src: whereYouAre },
+// thumbnail imports
+import NeonThumb from "../assets/thumbs/NeonStreet.jpg";
+import TropicannaThumb from "../assets/thumbs/Tropicanna.jpg";
+import WhereThumb from "../assets/thumbs/WhereYouAre.jpg";
+
+// track data
+const tracks = [
+  {
+    id: 1,
+    title: "Neon Street",
+    bpm: 120,
+    key: "A# minor",
+    src: neonStreet,
+    image: NeonThumb,
+  },
+  {
+    id: 2,
+    title: "Tropicanna",
+    bpm: 140,
+    key: "E minor",
+    src: tropicanna,
+    image: TropicannaThumb,
+  },
+  {
+    id: 3,
+    title: "Where You Are",
+    bpm: 90,
+    key: "B minor",
+    src: whereYouAre,
+    image: WhereThumb,
+  },
 ];
 
-function TrackCard({ track, isActive, onRequestPlay }) {
-  const audioRef = useRef(null);
-  const [isPlaying, setPlaying] = useState(false);
-
-  useEffect(() => {
-    if (!isActive && isPlaying) {
-      audioRef.current?.pause();
-      setPlaying(false);
-    }
-  }, [isActive, isPlaying]);
-
-  const toggle = async () => {
-    const el = audioRef.current;
-    if (!el) return;
-    if (el.paused) {
-      await onRequestPlay(track, el); // pass track object + audio element
-      await el.play();
-      setPlaying(true);
-    } else {
-      el.pause();
-      setPlaying(false);
-    }
-  };
-
+export default function Catalog() {
   return (
-    <article className="rounded-2xl shadow bg-white p-4 space-y-3">
-      <div className="aspect-video rounded-xl bg-slate-100 grid place-items-center text-slate-400">
-        <span className="text-sm">Cover Art</span>
-      </div>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold text-white mb-6">Catalog</h1>
 
-      <div>
-        <h3 className="font-semibold text-black">{track.title}</h3>
-        <p className="text-sm text-gray-600">{track.artist} • {track.key} • {track.bpm} BPM</p>
-      </div>
-
-      <audio ref={audioRef} src={track.src} preload="auto" />
-
-      <button
-        onClick={toggle}
-        className="px-3 py-1.5 rounded-xl bg-softgold text-softblack text-sm font-medium hover:shadow-gold transition"
-      >
-        {isPlaying ? "Pause" : "Play"}
-      </button>
-    </article>
-  );
-}
-
-export default function Catalog({ activeId, onRequestPlay }) {
-  return (
-    <main>
-      <h1 className="text-3xl font-bold mb-6 text-softgold">Catalog</h1>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {TRACKS.map((t) => (
-          <TrackCard
-            key={t.id}
-            track={t}
-            isActive={activeId === t.id}
-            onRequestPlay={onRequestPlay}
-          />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {tracks.map((track) => (
+          <div
+            key={track.id}
+            className="rounded-xl overflow-hidden bg-neutral-900 shadow-md"
+          >
+            <img
+              src={track.image}
+              alt={track.title}
+              className="w-full aspect-square object-cover"
+              loading="lazy"
+            />
+            <div className="p-4">
+              <h3 className="text-white font-semibold">{track.title}</h3>
+              <p className="text-sm text-neutral-400">
+                {track.bpm} BPM • {track.key}
+              </p>
+            </div>
+          </div>
         ))}
       </div>
-    </main>
+    </div>
   );
 }
